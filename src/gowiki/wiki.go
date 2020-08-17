@@ -14,6 +14,7 @@ import (
 type Page struct {
 	Title string
 	Body  []byte
+	Links []string
 }
 
 var tmplDir = "tmpl/"
@@ -73,9 +74,34 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}
 
+	linkList := loadList()
+	p.Links = linkList
+
 	renderTemplate(w, "view", p)
 }
 
+func loadList() []string {
+	var s []string
+	files, _ := ioutil.ReadDir("data/")
+
+	for _, file := range files {
+		s = append(s, file.Name())
+	}
+	replaceNameToLinkElement(s)
+	return s
+}
+
+func replaceNameToLinkElement(x []string) {
+	re := regexp.MustCompile(`^([a-zA-Z0-9]+)\.txt$`)
+	for k, v := range x {
+		// a := re.ReplaceAllStringFunc(v, replFunc)
+		b := re.FindStringSubmatch(v)
+		x[k] = replFunc(b[1])
+	}
+}
+func replFunc(s string) string {
+	return `<a href="/view/` + s + `">` + s + `</a>`
+}
 func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 	p, err := loadPage(title)
 
