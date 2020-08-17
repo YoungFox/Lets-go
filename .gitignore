@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+src/github.com/
+src/golang.org/
+src/google.golang.org/
+src/gopkg.in/
+.vscode/
+bin/
+pkg/
