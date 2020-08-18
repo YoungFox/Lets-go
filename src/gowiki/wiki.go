@@ -94,9 +94,10 @@ func loadList() []string {
 func replaceNameToLinkElement(x []string) {
 	re := regexp.MustCompile(`^([a-zA-Z0-9]+)\.txt$`)
 	for k, v := range x {
-		// a := re.ReplaceAllStringFunc(v, replFunc)
-		b := re.FindStringSubmatch(v)
-		x[k] = replFunc(b[1])
+		a := re.ReplaceAllString(v, replFunc("$1"))
+		// b := re.FindStringSubmatch(v)
+		// x[k] = replFunc(b[1])
+		x[k] = a
 	}
 }
 func replFunc(s string) string {
