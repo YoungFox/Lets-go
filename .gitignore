@@ -20,3 +20,4 @@ src/gopkg.in/
 .vscode/
 bin/
 pkg/
+bak
