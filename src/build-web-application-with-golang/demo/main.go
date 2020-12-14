@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"net/url"
 	"strings"
 )
 
@@ -24,15 +23,15 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	v := url.Values{}
-	v.Set("name", "Ava")
-	v.Add("friend", "Jess")
-	v.Add("friend", "Sarah")
-	v.Add("friend", "Zoe")
-	// v.Encode() == "name=Ava&friend=Jess&friend=Sarah&friend=Zoe"
-	fmt.Println(v.Get("name"))
-	fmt.Println(v.Get("friend"))
-	fmt.Println(v["friend"])
+	// v := url.Values{}
+	// v.Set("name", "Ava")
+	// v.Add("friend", "Jess")
+	// v.Add("friend", "Sarah")
+	// v.Add("friend", "Zoe")
+	// // v.Encode() == "name=Ava&friend=Jess&friend=Sarah&friend=Zoe"
+	// fmt.Println(v.Get("name"))
+	// fmt.Println(v.Get("friend"))
+	// fmt.Println(v["friend"])
 
 	fmt.Println("method:", r.Method) //获取请求的方法
 	if r.Method == "GET" {
@@ -42,8 +41,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		//请求的是登录数据，那么执行登录的逻辑判断
-		fmt.Println("username:", r.Form["username"])
-		fmt.Println("password:", r.Form["password"])
+		fmt.Println("username:", template.HTMLEscapeString(r.Form.Get("username"))) //输出到服务器端
+		fmt.Println("password:", template.HTMLEscapeString(r.Form.Get("password")))
+		// template.HTMLEscape(w, []byte(r.Form.Get("username"))) //输出到客户端
+
+		t, _ := template.New("foo").Parse(`{{define "T"}}Hello, {{.}}!{{end}}`)
+		_ = t.ExecuteTemplate(w, "T", template.HTML("<script>alert('you have been pwned')</script>"))
 	}
 }
 

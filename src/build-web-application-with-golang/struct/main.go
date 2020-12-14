@@ -175,29 +175,119 @@
 
 // }
 
+// package main
+
+// import "fmt"
+
+// type Human struct {
+// 	name  string
+// 	age   int
+// 	phone string // Human类型拥有的字段
+// }
+
+// type Employee struct {
+// 	Human      // 匿名字段Human
+// 	speciality string
+// 	phone      string // 雇员的phone字段
+// }
+
+// func main() {
+// 	Bob := Employee{Human{"Bob", 34, "777-444-XXXX"}, "Designer", "333-222"}
+// 	fmt.Println("Bob's work phone is:", Bob.phone)
+// 	// 如果我们要访问Human的phone字段
+// 	fmt.Println("Bob's personal phone is:", Bob.Human.phone)
+
+// 	fmt.Println(Bob.age)
+// 	fmt.Println(Bob.Human.age)
+// 	fmt.Println(Bob.age == Bob.Human.age)
+// }
+
+// package main
+
+// import "fmt"
+
+// const (
+// 	WHITE = iota
+// 	BLACK
+// 	BLUE
+// 	RED
+// 	YELLOW
+// )
+
+// type Color byte
+
+// type Box struct {
+// 	width, height, depth float64
+// 	color                Color
+// }
+
+// type BoxList []Box //a slice of boxes
+
+// func (b Box) Volume() float64 {
+// 	return b.width * b.height * b.depth
+// }
+
+// func (b *Box) SetColor(c Color) {
+// 	b.color = c
+// }
+
+// func (bl BoxList) BiggestColor() Color {
+// 	v := 0.00
+// 	k := Color(WHITE)
+// 	for _, b := range bl {
+// 		if bv := b.Volume(); bv > v {
+// 			v = bv
+// 			k = b.color
+// 		}
+// 	}
+// 	return k
+// }
+
+// func (bl BoxList) PaintItBlack() {
+// 	for i := range bl {
+// 		bl[i].SetColor(BLACK)
+// 	}
+// }
+
+// func (c Color) String() string {
+// 	strings := []string{"WHITE", "BLACK", "BLUE", "RED", "YELLOW"}
+// 	return strings[c]
+// }
+
+// func main() {
+// 	fmt.Println(YELLOW)
+// 	boxes := BoxList{
+// 		Box{4, 4, 4, RED},
+// 		Box{10, 10, 1, YELLOW},
+// 		Box{1, 1, 20, BLACK},
+// 		Box{10, 10, 1, BLUE},
+// 		Box{10, 30, 1, WHITE},
+// 		Box{20, 20, 20, YELLOW},
+// 	}
+
+// 	fmt.Printf("We have %d boxes in our set\n", len(boxes))
+// 	fmt.Println("The volume of the first one is", boxes[0].Volume(), "cm³")
+// 	fmt.Println("The color of the last one is", boxes[len(boxes)-1].color.String())
+// 	fmt.Println("The biggest one is", boxes.BiggestColor().String())
+
+// 	fmt.Println("Let's paint them all black")
+// 	boxes.PaintItBlack()
+// 	fmt.Println("The color of the second one is", boxes[1].color.String())
+
+// 	fmt.Println("Obviously, now, the biggest one is", boxes.BiggestColor().String())
+// }
+
 package main
 
-import "fmt"
-
-type Human struct {
-	name  string
-	age   int
-	phone string // Human类型拥有的字段
-}
-
-type Employee struct {
-	Human      // 匿名字段Human
-	speciality string
-	phone      string // 雇员的phone字段
-}
+import (
+	"fmt"
+	"reflect"
+)
 
 func main() {
-	Bob := Employee{Human{"Bob", 34, "777-444-XXXX"}, "Designer", "333-222"}
-	fmt.Println("Bob's work phone is:", Bob.phone)
-	// 如果我们要访问Human的phone字段
-	fmt.Println("Bob's personal phone is:", Bob.Human.phone)
-
-	fmt.Println(Bob.age)
-	fmt.Println(Bob.Human.age)
-	fmt.Println(Bob.age == Bob.Human.age)
+	var x float64 = 3.4
+	v := reflect.ValueOf(x)
+	fmt.Println("type:", v.Type())
+	fmt.Println("kind is float64:", v.Kind() == reflect.Float64)
+	fmt.Println("value:", v.Float())
 }
