@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -25,5 +26,13 @@ func main() {
 	err := http.ListenAndServe(":9090", nil) //设置监听的端口
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
+	}
+}
+
+var user = os.Getenv("USER")
+
+func init() {
+	if user == "" {
+		panic("no value for $USER")
 	}
 }
