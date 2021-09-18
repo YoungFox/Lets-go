@@ -12,7 +12,18 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/astaxie/session"
+	_ "github.com/astaxie/session/providers/memory"
 )
+
+var globalSessions *session.Manager
+
+//然后在init函数中初始化
+func init() {
+	globalSessions, _ = session.NewManager("memory", "gosessionid", 3600)
+	go globalSessions.GC()
+}
 
 func sayhelloName(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -31,6 +42,8 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
+	sess := globalSessions.SessionStart(w, r)
+
 	r.ParseForm()
 	fmt.Println("method:", r.Method)
 	fmt.Println("0000", r.Form.Get("username"))
@@ -41,10 +54,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		token := fmt.Sprintf("%x", hashWr.Sum(nil))
 		fmt.Println(timestamp, token)
 		t, _ := template.ParseFiles("login.gtpl")
-		log.Println(t.Execute(w, token))
+		log.Println(t.Execute(w, sess.Get("username")))
 	} else {
 		fmt.Println("username:", r.Form["username"])
 		fmt.Println("password:", r.Form["password"])
+		sess.Set("username", r.Form["username"])
 		if m, _ := regexp.MatchString("^\\p{Han}+$", r.Form.Get("username")); m {
 			fmt.Println("是中文名字")
 		} else {
